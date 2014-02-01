@@ -1,0 +1,33 @@
+<%--
+    Document   : footer
+    Created on : May 20, 2010, 12:20:12 AM
+    Author     : tgiunipero
+--%>
+
+
+
+
+<!--div id="st-footer">
+    <br>
+    <hr id="footerDivider">
+    <div style="float:left;">
+        <p><a href="<c:url value='#'/>">Privacy Policy</a>
+        &nbsp;&nbsp;::&nbsp;&nbsp;
+        <a href="<c:url value='#'/>">Contact</a>
+        &nbsp;&nbsp;&copy;&nbsp;&nbsp;
+        2013 SmartTimetable Inc.</p>
+    </div>
+    <div style="float:right;">
+        <a href="https://www.facebook.com/ericrothfels"><img src="img/facebook.png" width="30px" height="30px"></a>
+        <a href="http://www.linkedin.com/profile/view?id=229500104&trk=nav_responsive_tab_profile"><img src="img/linkedin.png" width="30px" height="30px"></a>
+    </div>
+</div-->
+
+</div> <!-- /container -->
+
+<!-- js -->
+<script src="/SmartTimetable/js/smartTimetable.js"></script>
+<script src="/SmartTimetable/js/timetable.js"></script>
+<script src="/SmartTimetable/js/bootstrap.min.js"></script>
+</body>
+</html>
