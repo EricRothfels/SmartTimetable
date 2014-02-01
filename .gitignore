@@ -4,3 +4,9 @@
 *.jar
 *.war
 *.ear
+
+# build files
+build/
+
+# mercurial files
+.hg/
