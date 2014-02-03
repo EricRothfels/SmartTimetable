@@ -210,26 +210,19 @@ public class ValidCombination {
                 for (int j=0; j < NUM_DAYS; j++) {
                     float endTime = 0;
                     List<Time> timeList = timeLists[i][j];
-                    int index = 0;
-                    
-                    String out = "";
-                    
+                    int count = 0;
                     for (Time time : timeList) {
-                        
-                        out += i+","+j+" [" + time.getStartTimeString() + ","+time.getEndTimeString()+"] ";
-                        
                         if (time.getStartTimeFloat() < endTime) {
                             // conflict found
-                            // TODO MAKE A REAL CONFLICT HERE
-                            // USING A FAKE CONFLICT FOR NOW:
-                            conflict = new Conflict(activities.get(0), activities.get(1));
+                            Activity a1 = timeList.get(count - 1).getActivity();
+                            Activity a2 = timeList.get(count).getActivity();
+                            conflict = new Conflict(a1, a2);
                             isValid = false;
-                            break;
+                            return;
                         }
                         endTime = time.getEndTimeFloat();
-                        index += 1;
+                        count += 1;
                     }
-                    System.out.println(out);
                 }
             }
             isValid = true;

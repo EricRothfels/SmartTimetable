@@ -22,6 +22,5 @@ public class PopulateCourseRunnable implements Runnable {
     public void run() {
         // populate the course's activity data
         course.populateActivityData();
-        AddCourseHelper.removeFutureCourse(course.getCourseName());
     }
 }

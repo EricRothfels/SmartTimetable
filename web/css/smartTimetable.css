@@ -35,6 +35,9 @@ body {
     box-sizing: border-box;
     cursor: default;
 }
+.addCourseError {
+    opacity: .85;
+}
 
 .info {
     margin-top: 20px;

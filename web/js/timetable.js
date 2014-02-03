@@ -160,7 +160,11 @@ function displayTimetable(startTime, endTime, activityList, tableNum, container)
 }
 
 function displayConflict(startTime, endTime, activityList, tableNum, container) {
-    var term = activityList[0].times[0].term;
+    if (activityList[0].times[0]) {
+        var term = activityList[0].times[0].term;
+    } else {
+        var term = "";
+    }
     
     // make empty table for each activity involved in the conflict    
     var tableId1 = 'timetable' + tableNum + '-term1';

@@ -36,6 +36,8 @@ public class Course extends AbstractCourse {
         
         private Document courseDocument;
         private String courseUrl;
+        
+        private boolean finishedLoading = false;
 
 
 	/**
@@ -48,9 +50,6 @@ public class Course extends AbstractCourse {
 	public Course(String courseName, String session, String campus)
                 throws BadAttributeValueExpException, IOException, InterruptedException, ExecutionException {
                 super(courseName, null, session, campus);
-                
-                // add course to list of courses being built
-                AddCourseHelper.addFutureCourse(courseName);
                 
                 // get url for course request
                 this.courseUrl = ScrapeWebPage.getCourseUrl(courseName, session, campus);
@@ -97,24 +96,20 @@ public class Course extends AbstractCourse {
 	}
 	
         
-        public void populateActivityData() {
-		// populate the 3 activity lists by term
-            try {
-		populateActivities();
-		
-		// Check if there are activities in course webPage
-		if (isEmpty())
-                    throw new BadAttributeValueExpException("Add " + name + " Unsuccessful: No activities found in course.");
-		
-		// set term based on the activities' terms
-		//setCourseTerm();
-		
-		// set priority of activities based on their type
-		setActivityPriority();
-            }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+        public void populateActivityData() throws Exception {
+            // populate the 3 activity lists by term
+            populateActivities();
+
+            // Check if there are activities in course webPage
+            if (isEmpty())
+                throw new BadAttributeValueExpException("Add " + name + " Unsuccessful: No activities found in course.");
+
+            // set term based on the activities' terms
+            //setCourseTerm();
+
+            // set priority of activities based on their type
+            setActivityPriority();
+            finishedLoading = true;
         }
         
 
@@ -131,7 +126,8 @@ public class Course extends AbstractCourse {
                 
 		ActivityCallable activityCallable = new ActivityCallable(activityUrl, status, activityID, type, typeInteger, name);
 		
-		addActivityToList(activityCallable.call());	
+		addActivityToList(activityCallable.call());
+                finishedLoading = true;
 	}
 
 
@@ -288,10 +284,18 @@ public class Course extends AbstractCourse {
         elements = elements.first().getElementsByClass("section1");
         if (elements.isEmpty()) {
             // remove course from list of courses being built
-            AddCourseHelper.removeFutureCourse(name);
+            finishedLoading = true;
             throw new BadAttributeValueExpException("Add " + name + " Unsuccessful: "
                     + "The requested course is either no longer offered at "
 	    			+ campus + "  or is not being offered this session.");
         }
+    }
+
+    public boolean isFinishedLoading() {
+        return finishedLoading;
+    }
+
+    public void setFinishedLoading(boolean finishedLoading) {
+        this.finishedLoading = finishedLoading;
     }
 }

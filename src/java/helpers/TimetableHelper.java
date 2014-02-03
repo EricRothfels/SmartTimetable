@@ -34,13 +34,11 @@ public class TimetableHelper {
 	// keep an array of activity indices
 	private int [][] activityIndices;
 	
-	/* Each time we add NUM_COMPARE combinations, we stop and display the top NUM_DISPLAY to the user
-	 * NUM_COMPARE also used as initial queue size 
-	 */
-	private static final int NUM_COMPARE = 1000;
-	
 	// number of combinations we display to user
 	private static final int NUM_DISPLAY = 40;
+        
+        // max number of iterations for the loop in maketimetables()
+        private static final long MAX_ITERATIONS = 1500000;
 	
 	private boolean finishedCombinations = false;
         
@@ -57,7 +55,7 @@ public class TimetableHelper {
 		
 		conflicts = new LinkedHashSet<>();
 		validCombinations = new ArrayList<>();
-		validCombinationsQueue = new PriorityQueue<>(NUM_COMPARE, new CombinationComparator());
+		validCombinationsQueue = new PriorityQueue<>(50, new CombinationComparator());
 		this.activityLists = activityLists;
                 this.preferences = preferences;
 		
@@ -109,7 +107,7 @@ public class TimetableHelper {
 		if (listIndex >= activityIndices.length)
 			return;
 		computeCombination();
-		int i=0;
+		long i = 0;
 		while (true) {
 			i++;
 			while ( listIndex < activityIndices.length &&
@@ -132,11 +130,15 @@ public class TimetableHelper {
 			typeIndex = 0;
 			listIndex = 0;			
 			
-			if (computeCombination())
-				break;
+			if (computeCombination()) {
+                            break;
+                        }
+                        if (i >= MAX_ITERATIONS) {
+                            break;
+                        }
 				
 		}  // end while loop
-		System.out.println("makeTimetables() loop iterations: " + i+1);
+		System.out.println("makeTimetables() loop iterations: " + i);
 		populateValidCombinationsList();
 		timetables.setTimetables(validCombinationsQueue);
 	}
@@ -152,12 +154,6 @@ public class TimetableHelper {
             if (validCombination.isValid()) {
                 // no conflicts
                 validCombinationsQueue.add(validCombination);
-                
-                // each time we have added NUM_COMPARE more combinations,
-                // we stop and display the top NUM_DISPLAY to the user
-                if (validCombinationsQueue.size() % NUM_COMPARE == 0) {
-                    return true;
-                }
             } 
             else {
                 // conflict found
@@ -207,8 +203,6 @@ public class TimetableHelper {
 		int type = activity.getTypeInteger();
 		
 		List<Activity> activities = activity.getActivityList().getListOfActivities(type);
-		
-		assert (activities.contains(activity));
 		
 		if (activities.size() == 1)
 			return true;	

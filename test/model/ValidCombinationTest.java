@@ -260,7 +260,7 @@ public class ValidCombinationTest {
         courses.add(course);
         
         // wait until the course has finished loading activities
-        while (AddCourseHelper.isInFutureCourses(courseName)) {
+        while (!course.isFinishedLoading()) {
             Thread.sleep(500);
         }
         activityList.addAll(course.getAllActivities());

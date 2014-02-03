@@ -168,7 +168,6 @@ public class ControllerServlet extends HttpServlet {
     private static void emptyCaches(HttpSession session) {
         session.setAttribute("courseList", null);
         CourseCache.emptyCache();
-        AddCourseHelper.emptyFutureCourseList();
     }
 
     private void addCourse(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
@@ -189,12 +188,6 @@ public class ControllerServlet extends HttpServlet {
                     writeXmlResponse(response, xmlResponse);
                     return;
                 }
-            }
-            // check if the course is in the process of being added
-            if (AddCourseHelper.isInFutureCourses(courseInput)) {
-                String xmlResponse = "<error>You have already added " + courseInput + "</error>";
-                writeXmlResponse(response, xmlResponse);
-                return;
             }
             String session = (String) httpSession.getAttribute("session");
             String campus = (String) httpSession.getAttribute("campus");
@@ -230,6 +223,7 @@ public class ControllerServlet extends HttpServlet {
         String courseInput = request.getParameter("course");
 
         if (courseInput != null) {
+            // remove course from list in user's session
             List<Course> courses = (List<Course>) session.getAttribute("courseList");
             if (courses != null) {
                 for (Course course : courses) {
@@ -245,15 +239,21 @@ public class ControllerServlet extends HttpServlet {
 
     private void makeTimetables(HttpServletResponse response, HttpSession session, Preferences prefs) {
         // build response
-        String xmlResponse = "";
+        String xmlResponse = null;
         try {
             // check if any courses are in the process of being added
             // if there are, we need to wait until they are finished
-            if (!AddCourseHelper.isEmpty()) {
-                String courseName = AddCourseHelper.getFirstFutureCourseName();
-                xmlResponse = "<error>Please wait, " + courseName + " is still being processed" + "</error>";
-            } else {
-                List<Course> courses = (List<Course>) session.getAttribute("courseList");
+            List<Course> courses = (List<Course>) session.getAttribute("courseList");
+            if (courses != null) {
+                for (Course course : courses) {
+                    if (!course.isFinishedLoading()) {
+                        String courseName = course.getCourseName();
+                        xmlResponse = "<error>Please wait, " + courseName + " is still being processed" + "</error>";
+                        break;
+                    }
+                }
+            }
+            if (xmlResponse == null) {
                 List<StandardTimetable> stts = (List<StandardTimetable>) session.getAttribute("sttList");
                 
                 long start = System.nanoTime();
@@ -342,7 +342,7 @@ public class ControllerServlet extends HttpServlet {
         response.setContentType("text/xml");
         response.setHeader("Cache-Control", "no-cache");
         
-        System.out.println(xmlResponse);
+        //System.out.println(xmlResponse);
         try {
             response.getWriter().write(xmlResponse);
         } catch (IOException ex) {

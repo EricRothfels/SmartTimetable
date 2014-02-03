@@ -102,7 +102,7 @@ public class Activity {
                     // add all new times to List<Time> times
                     if (dayString.length() > 0 && !term.equals("Total Seats Remaining:")) {
                         for (String day: days) {
-                            Time time = new Time(term, day, startTime, endTime, location, room);
+                            Time time = new Time(term, day, startTime, endTime, location, room, this);
                             times.add(time);
                         }
                     }

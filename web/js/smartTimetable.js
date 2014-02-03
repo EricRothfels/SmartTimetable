@@ -17,11 +17,12 @@ var lastEndTimeElementSelected;
  */
 function addErrorMessage(message) {
     var div = $('#addCourseError');
-        div.html(  '<div class="alert alert-block alert-error fade in">' +
-            closeButton +
-           '<h4 class="alert-heading"></h4>\
-            <p><strong>' + message + '</strong></p>\
-            </div>');
+    div.html(  '<div class="alert alert-block alert-error fade in">' +
+        closeButton +
+       '<h4 class="alert-heading"></h4>\
+        <p><strong>' + message + '</strong></p>\
+        </div>');
+    div.show();
     
     // clear previous timeouts
     clearTimeout(errorAlertTimeout);
@@ -44,7 +45,7 @@ function addErrorMsg(response) {
 
 // clear error messages
 function clearErrorMsg() {
-    $('#addCourseError').html('');
+    $('#addCourseError').fadeOut(600);
 }
 
 function clearCourseListAndTimetables() {

@@ -10,7 +10,7 @@ public class ActivityList {
 	/** 5 lists of activities:
 	 * 0: lectures, 1: labs, 2: tutorials, 3: misc. 4: waiting lists
 	 */
-	private List<List<Activity>> activityLists;
+	private List<Activity>[] activityLists;
 	
 	private static final int NUM_ACTIVITY_TYPES = 5;
 	
@@ -23,17 +23,17 @@ public class ActivityList {
 	 */
 	public ActivityList(String name) {
 		courseName = name;
-		activityLists = new ArrayList<>();
+		activityLists = new List[NUM_ACTIVITY_TYPES];
 		for (int i=0; i < NUM_ACTIVITY_TYPES; i++)
-			activityLists.add(new ArrayList<Activity>());
+			activityLists[i] = new ArrayList<Activity>();
 	}
 	
 	/**
 	 * @return true if all activity lists are empty, false otherwise
 	 */
 	public boolean isEmpty() {
-		for (int i=0; i < activityLists.size(); i++)
-			if (!activityLists.get(i).isEmpty())
+		for (int i=0; i < activityLists.length; i++)
+			if (!activityLists[i].isEmpty())
 				return false;
 		return true;
 	}
@@ -47,7 +47,7 @@ public class ActivityList {
 	 */
 	public void checkExistingAndAdd(Activity activity) {
 		int type = activity.getTypeInteger();
-		List<Activity> activities = activityLists.get(type);
+		List<Activity> activities = activityLists[type];
 		for (Activity a : activities) {
 			if (a.equals(activity))
 				return;
@@ -63,9 +63,9 @@ public class ActivityList {
 	 * @throws BadAttributeValueExpException
 	 */
 	public List<Activity> getListOfActivities(int activityTypeIndex) throws BadAttributeValueExpException {
-		if (activityTypeIndex < 0 || activityTypeIndex >= activityLists.size())
+		if (activityTypeIndex < 0 || activityTypeIndex >= activityLists.length)
 			throw new BadAttributeValueExpException("Invalid index " + activityTypeIndex + " passed to ActivityList.getActivityList(int i)");
-		return activityLists.get(activityTypeIndex);
+		return activityLists[activityTypeIndex];
 	}
 	
 	
@@ -96,8 +96,8 @@ public class ActivityList {
 	 * 
 	 */
 	public void clear() {
-		for (int i=0; i < activityLists.size(); i++)
-			activityLists.get(i).clear();
+		for (int i=0; i < activityLists.length; i++)
+			activityLists[i].clear();
 	}
 
 
@@ -109,7 +109,7 @@ public class ActivityList {
 		try {
 			for (int i=0; i < NUM_ACTIVITY_TYPES; i++) {
 				List<Activity> source = activityList.getListOfActivities(i);
-				List<Activity> dest = activityLists.get(i);
+				List<Activity> dest = activityLists[i];
 				for (Activity activity : source) {
 					dest.add(activity);
 					activity.setActivityList(this);
