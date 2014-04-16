@@ -84,68 +84,68 @@
                 <li><label class="tree-toggler nav-header">Days Off</label>
                     <ul class="nav nav-list tree">
                         <li><label class="tree-toggler nav-header">Term 1</label>
-                            <ul class="nav nav-list tree dayoff-term1">
-                                <li><a href="#">Monday</a></li>
-                                <li><a href="#">Tuesday</a></li>
-                                <li><a href="#">Wednesday</a></li>
-                                <li><a href="#">Thursday</a></li>
-                                <li><a href="#">Friday</a></li>
-                            </ul>
+                            <form>
+                                <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Monday"> Monday</label>
+                                <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Tuesday"> Tuesday</label>
+                                <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Wednesday"> Wednesday</label>
+                                <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Thursday"> Thursday</label>
+                                <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Friday"> Friday</label>
+                            </form>
                         </li>
                         <li><label class="tree-toggler nav-header">Term 2</label>
-                            <ul class="nav nav-list tree dayoff-term2">
-                                <li><a href="#">Monday</a></li>
-                                <li><a href="#">Tuesday</a></li>
-                                <li><a href="#">Wednesday</a></li>
-                                <li><a href="#">Thursday</a></li>
-                                <li><a href="#">Friday</a></li>
-                            </ul>
+                            <form>
+                                <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Monday"> Monday</label>
+                                <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Tuesday"> Tuesday</label>
+                                <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Wednesday"> Wednesday</label>
+                                <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Thursday"> Thursday</label>
+                                <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Friday"> Friday</label>
+                            </form>
                         </li>
                     </ul>
                 </li>
                 <li class="divider"></li>
 
                 <li><label class="tree-toggler nav-header">Earliest Class</label>
-                    <ul class="nav nav-list tree earliestClass">
-                        <li><a href="">8:00</a></li>
-                        <li><a href="">9:00</a></li>
-                        <li><a href="">10:00</a></li>
-                        <li><a href="">11:00</a></li>
-                        <li><a href="">12:00</a></li>
-                        <li><a href="">13:00</a></li>
-                        <li><a href="">14:00</a></li>
-                        <li><a href="">15:00</a></li>
-                    </ul>
+                    <form>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="8"> 8:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="9"> 9:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="10"> 10:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="11"> 11:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="12"> 12:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="13"> 13:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="14"> 14:00</label>
+                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="15"> 15:00</label>
+                    </form>
                 </li>
                 <li class="divider"></li>
 
                 <li><label class="tree-toggler nav-header">Latest Class</label>
-                    <ul class="nav nav-list tree latestClass">
-                        <li><a href="">10:00</a></li>
-                        <li><a href="">11:00</a></li>
-                        <li><a href="">12:00</a></li>
-                        <li><a href="">13:00</a></li>
-                        <li><a href="">14:00</a></li>
-                        <li><a href="">15:00</a></li>
-                        <li><a href="">16:00</a></li>
-                        <li><a href="">17:00</a></li>
-                        <li><a href="">18:00</a></li>
-                        <li><a href="">19:00</a></li>
-                        <li><a href="">20:00</a></li>
-                    </ul>
+                    <form>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="10"> 10:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="11"> 11:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="12"> 12:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="13"> 13:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="14"> 14:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="15"> 15:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="16"> 16:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="17"> 17:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="18"> 18:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="19"> 19:00</label>
+                        <label><input type="radio" name="latestClass" class="preferencesInput" value="20"> 20:00</label>
+                    </form>
                 </li>
                 <li class="divider"></li>
 
                 <li><label class="tree-toggler nav-header">Time Between Classes</label>
-                    <ul class="nav nav-list tree breakTime">
-                        <li><a href="">As little as possible</a></li>
-                        <li><a href="">1 Hour</a></li>
-                        <li><a href="">2 Hours</a></li>
-                        <li><a href="">3 Hours</a></li>
-                        <li><a href="">4 Hours</a></li>
-                        <li><a href="">5 Hours</a></li>
-                        <li><a href="">As much as possible</a></li>
-                    </ul>
+                    <form>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="0"> As little as possible</label>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="1"> 1 Hour</label>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="2"> 2 Hours</label>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="3"> 3 Hours</label>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="4"> 4 Hours</label>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="5"> 5 Hours</label>
+                        <label><input type="radio" name="breakTime" class="preferencesInput" value="12"> As much as possible</label>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -161,7 +161,7 @@
     <div id="addCourseError"></div>
     
     <div id="courses-table">
-        <div class="info" style="opacity:0.6;">
+        <div class="info" style="opacity:0.7;">
         <%  List<Course> courseList = (List<Course>) session.getAttribute("courseList");
 
             Boolean courseListIsEmpty = isEmpty(courseList); //courseList == null || courseList.isEmpty();
@@ -181,14 +181,17 @@
             <button class="btn btn-info">Import Saved List</button>
         </div>
         <div class="well">
+            <a style="float:right;" href="removeCourse?course=REMOVE_ALL" role="button" data-toggle="modal">
+                <i class="icon-remove" title="Remove All Courses"></i>
+            </a>
             <table class="table">
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th></th>
                         <th>Course Name</th>
                         <th>Term</th>
                         <th>Username</th>
-                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -200,13 +203,16 @@
                     %>
                     <tr>
                         <td> <% out.print(i);%> </td>
-                        <td> <a href="<% out.print(course.getUrl());%>" target="_blank" class="link"><% out.print(course.getCourseName());%></a></td>
+                        <td></td>
+                        <td><a href="<% out.print(course.getUrl());%>" target="_blank" class="link">
+                                <% out.print(course.getCourseName());%>
+                            </a>
+                        </td>
                         <td> <% out.print(course.getTerm());%> </td>
                         <td>[username]</td>
-                        <td></td>
                         <td>
                             <a href="removeCourse?course=<% out.print(course.getCourseName());%>" role="button" data-toggle="modal">
-                                <i class="icon-remove" title="Remove Course"></i>
+                                <i class="icon-remove" title="Remove <% out.print(course.getCourseName()); %>"></i>
                             </a>
                         </td>
                     </tr>

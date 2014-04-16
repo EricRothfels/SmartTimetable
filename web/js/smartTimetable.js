@@ -6,10 +6,6 @@ var isSessionFinishedLoading = false;
 // used to keep track of/cancel timeouts set to clear the error message div
 var errorAlertTimeout;
 
-// keeps track of the last preference the user clicked
-var lastBreakElementSelected;
-var lastStartTimeElementSelected;
-var lastEndTimeElementSelected;
 
 /**
  * Add an error message to the page
@@ -53,12 +49,29 @@ function clearCourseListAndTimetables() {
     $('#timetable-container').html('');
 }
 
+function sendPopulateCourseAjax(courseName) {
+    var courseClass = courseName.replace(" ", "");
+    $.ajax({
+        url: "/SmartTimetable/populateCourse?courseName=" + courseClass,
+        dataType: "xml",
+        success: function() {
+            console.log("populateCourse " + courseClass + " ajax Success");
+            // hide the course loading animation
+            $('.' + courseClass).css("display", "none");
+        },
+        error: function(data) {
+            console.log("populateCourse " + courseClass + " ajax Error");
+            addErrorMsg(data);
+        }
+    });
+}
+
 
 // parse xml add course response
 function processAddCourseResponse(response) {
     if (response == undefined) {
         console.log("undefined response returned");
-        return;
+        return false;
     }
     var course = response.getElementsByTagName("course")[0];
     if (course != undefined) {
@@ -67,11 +80,14 @@ function processAddCourseResponse(response) {
         var courseName = course.getElementsByTagName("courseName")[0].childNodes[0].nodeValue;
         var courseTerm = course.getElementsByTagName("term")[0].childNodes[0].nodeValue;
         var url = course.getElementsByTagName("url")[0].childNodes[0].nodeValue;
-        addCoursetoList(courseName, courseTerm, url);
+        
+        // add the course to the course list table
+        return addCoursetoList(courseName, courseTerm, url);
     }
     else {
         // error case
         addErrorMsg(response);
+        return false;
     }
 }
 
@@ -124,13 +140,17 @@ function addCoursetoList(courseName, courseTerm, url) {
         div.html('  <div class="btn-toolbar">\
                         <button class="btn btn-info">Save this List</button>\
                         <button class="btn btn-info">Import Saved List</button>\
-                    </div><div class="well"><table class="table">\
+                    </div><div class="well">\
+                    <a style="float:right;" href="removeCourse?course=REMOVE_ALL" role="button" data-toggle="modal">\
+                        <i class="icon-remove" title="Remove All Courses"></i>\
+                    </a>\
+                    <table class="table">\
                             <thead><tr>\
                                     <th>#</th>\
+                                    <th></th>\
                                     <th>Course Name</th>\
                                     <th>Term</th>\
                                     <th>Username</th>\
-                                    <th></th>\
                                     <th></th>\
                                 </tr></thead>\
                             <tbody id="courses-table-body">\
@@ -139,20 +159,15 @@ function addCoursetoList(courseName, courseTerm, url) {
     }
     // add the new course's information with a new row in the table
     var courseClass = courseName.replace(" ", "");
-    tableBody.append('<tr><td>' + index + '</td>\
+    tableBody.append('<tr><td>' + index + '</td>\\n\
+                          <td><div class="course-modal ' + courseClass + '"></div></td>\
                           <td><a href="' + url + '" target="_blank" class="link">' + courseName + '</a></td>\
                           <td>' + courseTerm + '</td>\
                           <td>[username]</td>\
-                          <td><div class="course-modal ' + courseClass + '"></div></td>\
                           <td><a href="removeCourse?course='+ courseName +'" role="button" data-toggle="modal">\
-                                  <i class="icon-remove" title="Remove Course"></i>\
+                                  <i class="icon-remove" title="Remove '+ courseName +'"></i>\
                               </a></td></tr>');
-    
-    courseClass = "." + courseClass;
-    setTimeout(function() {
-        // TODO hook this up to an ajax call
-        $(courseClass).css("display", "none");
-    }, 5000);
+    return courseName;
 }
 
 function addSessionDropdownData(data) {
@@ -237,9 +252,8 @@ function sendAjax(requestData, url, title, dropdown) {
             dropdown.html(title + requestData + " " + '<strong class="caret"></strong>');
             return data;
         },
-        error: function(data) {
+        error: function() {
             console.log("Change session ajax Error");
-            console.log(data);
         }
     });
 }
@@ -329,7 +343,13 @@ function initCourseSubmitHandler() {
                     //document.body.style.cursor='auto';
                     // Call this function on success
                     console.log("Add course ajax Success");
-                    processAddCourseResponse(data);
+                    var courseName = processAddCourseResponse(data);
+                    
+                    if (courseName) {
+                        unBlockUI();
+                        // start the loading of the course on the server
+                        sendPopulateCourseAjax(courseName);
+                    }
                     return data;
                 },
                 error: function(data) {
@@ -358,90 +378,29 @@ function initPreferencesHandler() {
     $('#preferencesPanel').hide();
     $('label.tree-toggler').parent().children('ul.tree').toggle(300);
     
-    
-    $('.nav-list .tree a').click(function(event) {
-        event.preventDefault();
-        var element = $(this);
-        var parent = element.parent().parent();
-        var text = element.text()
+    $('.preferencesInput').click(function(event) {
         var queryString;
-        var elementSelected;
+        var name = $(this).attr('name');
         
-        if (parent.hasClass("dayoff-term1")) {
-            var dayInt = dayToInt(text);
-            queryString = "dayoffTerm1=" + dayInt;
-            elementSelected = "dayoff";
-            
-        } else if (parent.hasClass("dayoff-term2")) {
-            var dayInt = dayToInt(text);
-            queryString = "dayoffTerm2=" + dayInt;
-            elementSelected = "dayoff";
-            
-        } else if (parent.hasClass("earliestClass")) {
-            var time = text.split(":")[0];
+        if (name === "dayoffTerm1" || name === 'dayoffTerm2') {
+            queryString = name + "=" + dayToInt($(this).attr('value')) +
+                    "&checked=" + this.checked;
+        } else if (name === "earliestClass") {
+            var time = $(this).attr('value');
             queryString = "startTime=" + time;
-            elementSelected = "earliestClass";
-            
-        } else if (parent.hasClass("latestClass")) {
-            var time = text.split(":")[0];
+        } else if (name === "latestClass") {
+            var time = $(this).attr('value');
             queryString = "endTime=" + time;
-            elementSelected = "latestClass";
-            
         } else {
-            var hour = text.split(" Hour")[0];
-            var hourInt = parseInt(hour);
-            if (hourInt) {
-                queryString = "breakLength=" + hourInt;
-            } else if (text.indexOf("little") != -1) {
-                queryString = "breakLength=" + 0;
-            } else {
-                queryString = "breakLength=" + 6;
-            }
+            // breaktime
+            var time = $(this).attr('value');
+            queryString = "breakLength=" + time;
         }
-        
         $.ajax({
             url: "/SmartTimetable/preferences?" + queryString,
             dataType: "xml",
             success: function(data) {
                 console.log("preferences ajax Success");
-                
-                switch(elementSelected) {
-                    case "dayoff":
-                        if (element.text().indexOf("--") === -1) {
-                            element.css("background-color", '#0E3A63');
-                            element.text("-- " + element.text());
-                        } else {
-                            element.css("background-color", '#f5f5f5');
-                            element.text(element.text().split("-- ")[1]);
-                        }
-                        return;
-                    case "earliestClass":
-                        if (lastStartTimeElementSelected) {
-                            var el = lastStartTimeElementSelected;
-                            el.css("background-color", '#f5f5f5');
-                            el.text(el.text().split("-- ")[1]);
-                        }
-                        lastStartTimeElementSelected = element;
-                        break;
-                    case "latestClass":
-                        if (lastEndTimeElementSelected) {
-                            var el = lastEndTimeElementSelected;
-                            el.css("background-color", '#f5f5f5');
-                            el.text(el.text().split("-- ")[1]);
-                        }
-                        lastEndTimeElementSelected = element;
-                        break;
-                    default:
-                        if (lastBreakElementSelected) {
-                            var el = lastBreakElementSelected;
-                            el.css("background-color", '#f5f5f5');
-                            el.text(el.text().split("-- ")[1]);
-                        }
-                        lastBreakElementSelected = element;
-                        break;
-                }
-                element.css("background-color", '#0E3A63');
-                element.text("-- " + element.text());
             },
             error: function(data) {
                 console.log("preferences ajax Error");
@@ -479,4 +438,10 @@ function blockUI() {
             $(this).unbind("ajaxStart");
         }    
     });
+}
+
+// disable blocking of the UI during ajax calls
+function unBlockUI() {
+    $("body").removeClass("loading");
+    $(document).unbind("ajaxStart");
 }

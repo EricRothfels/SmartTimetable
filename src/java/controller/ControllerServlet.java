@@ -5,7 +5,6 @@
 package controller;
 
 import app.Preferences;
-import caches.CourseCache;
 import helpers.AddCourseHelper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpSession;
 import model.Course;
 import helpers.CourseBuilder;
 import helpers.TimetablesBuilder;
-import java.util.Enumeration;
 import model.StandardTimetable;
 import webServices.ScrapeWebPage;
 
@@ -39,6 +37,7 @@ import webServices.ScrapeWebPage;
     "/campus",
     "/signup",
     "/about",
+    "/populateCourse",
     "/preferences",
     "/removeCourse"})
 public class ControllerServlet extends HttpServlet {
@@ -76,7 +75,7 @@ public class ControllerServlet extends HttpServlet {
                 break;
             case "/timetables":
                 break;
-            case "/makeTimetables":
+            case "/makeTimetables": 
                 Preferences prefs = getTimetablePreferences(session);
                 makeTimetables(response, session, prefs);
                 return;
@@ -96,6 +95,9 @@ public class ControllerServlet extends HttpServlet {
                 return;
             case "/campus":
                 changeCampus(request, session);
+                return;
+            case "/populateCourse":
+                populateCourse(request, response, session);
                 return;
         }
         // Set standard HTTP/1.0 no-cache header.
@@ -165,11 +167,45 @@ public class ControllerServlet extends HttpServlet {
         return (path.equals("/")) ? "index.jsp" : "/WEB-INF/servelets" + path + ".jsp";
     }
     
-    private static void emptyCaches(HttpSession session) {
+    private static void emptyCourseList(HttpSession session) {
         session.setAttribute("courseList", null);
-        CourseCache.emptyCache();
     }
 
+    /**
+     * Populate a course's activity data. Triggered by an ajax call from the UI
+     */
+    private void populateCourse(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
+        // get user input from request
+        String courseName = request.getParameter("courseName");
+
+        if (courseName != null) {
+            courseName = AddCourseHelper.processCourseName(courseName);
+            String xmlResponse = "";
+            
+            // find the course to populate in the list of added courses
+            List<Course> courses = (List<Course>) httpSession.getAttribute("courseList");
+            if (courses != null) {
+                for (Course course : courses) {
+                    if (course.getCourseName().equals(courseName)) {
+                        try {
+                            // populate the course's data
+                            course.populateActivityData();
+                            xmlResponse = "<success>" + courseName + "</success>";
+                        } catch (Exception ex) {
+                            xmlResponse = "<error>" + ex + "</error>";
+                            ex.printStackTrace();
+                        } finally {
+                            writeXmlResponse(response, xmlResponse);
+                            return;
+                        }
+                    }
+                }
+            }
+            String error = "Course " + courseName + " has not been added to the session course list";
+            writeXmlResponse(response, "<error>" + error + "</error>");
+        }
+    }
+    
     private void addCourse(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
         // get user input from request
         String courseInput = request.getParameter("courseInput");
@@ -226,11 +262,16 @@ public class ControllerServlet extends HttpServlet {
             // remove course from list in user's session
             List<Course> courses = (List<Course>) session.getAttribute("courseList");
             if (courses != null) {
-                for (Course course : courses) {
-                    if (course.getCourseName().equals(courseInput)) {
-                        courses.remove(course);
-                        session.setAttribute("courseList", courses);
-                        break;
+                if (courseInput.equals("REMOVE_ALL")) {
+                    courses.clear();
+                    session.setAttribute("courseList", courses);
+                } else {
+                    for (Course course : courses) {
+                        if (course.getCourseName().equals(courseInput)) {
+                            courses.remove(course);
+                            session.setAttribute("courseList", courses);
+                            break;
+                        }
                     }
                 }
             }
@@ -281,7 +322,7 @@ public class ControllerServlet extends HttpServlet {
         
         // set the current session
         session.setAttribute("session", sesh.substring(0, sesh.length()-5));
-        emptyCaches(session);
+        emptyCourseList(session);
     }
 
     private void changeCampus(HttpServletRequest request, HttpSession session) {
@@ -291,7 +332,7 @@ public class ControllerServlet extends HttpServlet {
         } else {
             session.setAttribute("campus", UBC_CAMPUS);
         }
-        emptyCaches(session);
+        emptyCourseList(session);
     }
     /**
      * Scrape the sessions from the main course website
@@ -342,7 +383,7 @@ public class ControllerServlet extends HttpServlet {
         response.setContentType("text/xml");
         response.setHeader("Cache-Control", "no-cache");
         
-        //System.out.println(xmlResponse);
+        System.out.println(xmlResponse);
         try {
             response.getWriter().write(xmlResponse);
         } catch (IOException ex) {
@@ -375,12 +416,24 @@ public class ControllerServlet extends HttpServlet {
         Preferences prefs = getTimetablePreferences(session);
         try {
             if (dayoffTerm1 != null) {
+                String checked = request.getParameter("checked");
                 int day = Integer.parseInt(dayoffTerm1);
-                prefs.togglePreferredDayOff(1, day);
+                
+                if (checked != null && checked.equals("true")) {
+                    prefs.setPreferredDayOff(1, day, true);
+                } else if (checked != null && checked.equals("false")) {
+                    prefs.setPreferredDayOff(1, day, false);
+                }
 
             } else if (dayoffTerm2 != null) {
+                String checked = request.getParameter("checked");
                 int day = Integer.parseInt(dayoffTerm2);
-                prefs.togglePreferredDayOff(2, day);
+                
+                if (checked != null && checked.equals("true")) {
+                    prefs.setPreferredDayOff(2, day, true);
+                } else if (checked != null && checked.equals("false")) {
+                    prefs.setPreferredDayOff(2, day, false);
+                }
 
             } else if (startTime != null) {
                 int time = Integer.parseInt(startTime);

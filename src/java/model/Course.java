@@ -1,7 +1,5 @@
 package model;
 
-
-import helpers.AddCourseHelper;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import javax.management.BadAttributeValueExpException;
@@ -11,7 +9,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import threadServices.ActivityCallable;
-import threadServices.PopulateCourseRunnable;
 import webServices.ScrapeWebPage;
 
 
@@ -59,10 +56,6 @@ public class Course extends AbstractCourse {
 		// check if url is valid
                 checkUrl(courseDocument);
                 
-                // populate course data asychronously
-                Thread thread = new Thread(new PopulateCourseRunnable(this));
-                thread.start();
-                
                 // populate course data sychronously
                 //populateActivityData();
 	}
@@ -97,6 +90,10 @@ public class Course extends AbstractCourse {
 	
         
         public void populateActivityData() throws Exception {
+            if (finishedLoading) {
+                // course has already been populated
+                return;
+            }
             // populate the 3 activity lists by term
             populateActivities();
 
@@ -293,9 +290,5 @@ public class Course extends AbstractCourse {
 
     public boolean isFinishedLoading() {
         return finishedLoading;
-    }
-
-    public void setFinishedLoading(boolean finishedLoading) {
-        this.finishedLoading = finishedLoading;
     }
 }

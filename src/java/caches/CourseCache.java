@@ -17,18 +17,12 @@ import model.Course;
 public class CourseCache {
     
     private static CourseCache cache = null; 
-    private static Map<String, Course> courseMap;
-    private static List<Course> courseList;
+    private static Map<String, Map<String, Course>> courseMap;
 
-   
-    
     
     private CourseCache() {
-        courseMap = new HashMap<String, Course>();
-        courseList = new ArrayList<Course>();
+        courseMap = new HashMap<>();
     }
-    
-    
     
     public static CourseCache getInstance() {
         if (cache == null)
@@ -36,31 +30,41 @@ public class CourseCache {
         return cache;
     }
     
-    public static List<Course> getCourseList() {
-        return courseList;
-    }
-     
-    public static Map<String, Course> getCourseMap() {
-        return courseMap;
+    private static String getSessionKey(String session, String campus) {
+        return session + " " + campus;
     }
     
-    public static void put(Course course) {
-        courseMap.put(course.getCourseName(), course);
-        courseList.add(course);
+    
+    public static void put(String session, String campus, Course course) {
+        String sessionKey = getSessionKey(session, campus);
+        Map<String, Course> coursemap;
+        if (courseMap.containsKey(sessionKey)) {
+            coursemap = courseMap.get(sessionKey);
+        } else {
+            coursemap = new HashMap();
+        }
+        coursemap.put(course.getCourseName(), course);
+        courseMap.put(sessionKey, coursemap);
     }
     
-    public static Course get(String courseName) {
-        return courseMap.get(courseName);
+    public static Course get(String session, String campus, String courseName) {
+        String sessionKey = getSessionKey(session, campus);
+        Map<String, Course> coursemap = courseMap.get(sessionKey);
+        if (coursemap != null) {
+            return coursemap.get(courseName);
+        }
+        return null;
     }
     
-    public static void remove(String courseName) {
-        Course course = courseMap.remove(courseName);
-        if (course != null)
-            courseList.remove(course);
+    public static void remove(String session, String campus, String courseName) {
+        String sessionKey = getSessionKey(session, campus);
+        Map<String, Course> coursemap = courseMap.get(sessionKey);
+        if (coursemap != null) {
+            coursemap.remove(courseName);
+        }
     }
     
     public static void emptyCache() {
-        courseMap = new HashMap<String, Course>();
-        courseList = new ArrayList<Course>();
+        courseMap.clear();
     }
 }

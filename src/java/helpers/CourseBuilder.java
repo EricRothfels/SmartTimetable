@@ -32,18 +32,18 @@ public class CourseBuilder {
      * then adds the course(s)
      */
     public Course buildCourse() throws Exception {
-        Course course = null;
-
         // check if the course is in the cache
-        course = courseCache.get(courseName);
+        course = courseCache.get(session, campus, courseName);
         if (course == null) {
             // TODO check if the course is in the database
-
+            System.err.println("ERIC, course was NOT in the cache");
+            
             // make a new course
             course = new Course(courseName, session, campus);
-            courseCache.put(course);
+            courseCache.put(session, campus, course);
+        } else {
+            System.err.println("ERIC, course was IN the cache");
         }
-        this.course = course;
         return course;
     }
     

@@ -54,17 +54,16 @@ public class Preferences {
             this.preferredEndTime = preferredEndTime;
         }
         
-	/**
+        /**
 	 * Set a preference for a day on or off
 	 * @param preference: true is day off, false is no preference
 	 * @param day is the day of the week to change (1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri)
 	 * @param term [1 | 2] is the term to set the preference for
 	 */
-	public void togglePreferredDayOff(int term, int day) throws BadAttributeValueExpException {
+	public void setPreferredDayOff(int term, int day, boolean prefferedOff) throws BadAttributeValueExpException {
             if ((term == 1 || term == 2) &&
                 day >= 1 && day <= 5) {
-                boolean dayOff = preferredDaysOff[term - 1][day - 1];
-                preferredDaysOff[term - 1][day - 1] = !dayOff;
+                preferredDaysOff[term - 1][day - 1] = prefferedOff;
             } else {
                 throw new BadAttributeValueExpException(
                 "Invalid params passed to Preferences.setDayOffPreference(): term:" + term + " day:" + day);
