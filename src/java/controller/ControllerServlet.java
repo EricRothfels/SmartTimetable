@@ -6,6 +6,7 @@ package controller;
 
 import app.Preferences;
 import helpers.AddCourseHelper;
+import helpers.ControllerHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -281,34 +282,37 @@ public class ControllerServlet extends HttpServlet {
     private void makeTimetables(HttpServletResponse response, HttpSession session, Preferences prefs) {
         // build response
         String xmlResponse = null;
+        List<Course> courses = (List<Course>) session.getAttribute("courseList");
+        
+        // check if courses are finished loading
+        xmlResponse = ControllerHelper.isCoursesFinishedLoading(courses);
+        if (xmlResponse != null) {
+            writeXmlResponse(response, xmlResponse);
+            return;
+        }
+        // don't allow multiple makeTimetables() for same user
+        Boolean makingTimetables = (Boolean) session.getAttribute("makingTimetables");
+        if (makingTimetables != null && makingTimetables) {
+            writeXmlResponse(response, xmlResponse);
+            return;
+        }
+        
         try {
-            // check if any courses are in the process of being added
-            // if there are, we need to wait until they are finished
-            List<Course> courses = (List<Course>) session.getAttribute("courseList");
-            if (courses != null) {
-                for (Course course : courses) {
-                    if (!course.isFinishedLoading()) {
-                        String courseName = course.getCourseName();
-                        xmlResponse = "<error>Please wait, " + courseName + " is still being processed" + "</error>";
-                        break;
-                    }
-                }
-            }
-            if (xmlResponse == null) {
-                List<StandardTimetable> stts = (List<StandardTimetable>) session.getAttribute("sttList");
-                
-                long start = System.nanoTime();
+            session.setAttribute("makingTimetables", true);
+            List<StandardTimetable> stts = (List<StandardTimetable>) session.getAttribute("sttList");
+            long start = System.nanoTime();
 
-                TimetablesBuilder ttBuilder = new TimetablesBuilder(courses, stts, prefs);
-                xmlResponse = ttBuilder.makeTimetables();
-                
-                double time = (System.nanoTime() - start) / 1000000000.0;
-                System.out.println("Maketimetables runtime: " + time + "s");
-            }
+            TimetablesBuilder ttBuilder = new TimetablesBuilder(courses, stts, prefs);
+            xmlResponse = ttBuilder.makeTimetables();
+
+            double time = (System.nanoTime() - start) / 1000000000.0;
+            System.out.println("Maketimetables runtime: " + time + "s");
+
         } catch (Exception ex) {
             xmlResponse = "<error>" + ex + "</error>";
             ex.printStackTrace();
         } finally {
+            session.setAttribute("makingTimetables", false);
             writeXmlResponse(response, xmlResponse);
         }
     }

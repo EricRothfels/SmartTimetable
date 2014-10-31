@@ -32,8 +32,6 @@ public class TimetablesBuilder {
     private TimetableHelper timetableHelper;
     private final Preferences preferences;
     
-    private boolean makingTimetables = false;
-
     public TimetablesBuilder(List<Course> selectedCourses,
                              List<StandardTimetable> selectedSTTs,
                              Preferences prefs) throws Exception {
@@ -87,20 +85,9 @@ public class TimetablesBuilder {
         if (timetableHelper.isFinishedCombinations()) {
             return "<error>finished</error>";
         }
-        // don't allow multiple makeTimetables() to run in parallel
-        if (makingTimetables) {
-            return null;
-        }
-        makingTimetables = true;
 
-        try {
-            // make the timetables
-            timetableHelper.makeTimetables();
-            makingTimetables = false;
-        } catch (BadAttributeValueExpException ex) {
-            makingTimetables = false;
-            throw ex;
-        }
+        // make the timetables
+        timetableHelper.makeTimetables();
         
         Set<Conflict> conflicts = timetableHelper.getConflicts();
         List<ValidCombination> validCombinations = timetableHelper.getValidCombinations();
