@@ -183,7 +183,7 @@ function addSessionDropdownData(data) {
     var sessionDropdown = $("#session-dropdown");
     
     var activeSession = data.getElementsByTagName("activeSession")[0].childNodes[0].nodeValue;
-    sessionDropdown.html('Session: ' + activeSession + '<strong class="caret"></strong>');
+    sessionDropdown.html(sessionDropdown.html() + ' Session: ' + activeSession + '<strong class="caret"></strong>');
     
     addChangeSessionHandler();
 }

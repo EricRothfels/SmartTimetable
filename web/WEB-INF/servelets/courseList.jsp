@@ -2,9 +2,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Course" %>
 
+<div class="container">
 <div class="manageCourses-navbar">
     <div class="navbar navbar-inner">
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -15,18 +16,18 @@
                 
                 <ul class="nav pull-right">
                     <!--li id="makeTimetables" class=""><a href="">Make Timetables</a></li-->
-                    <li id="makeTimetables" class=""><button class="btn btn-info">Make Timetables</button></li>
+                    <li id="makeTimetables" class=""><button class="btn btn-info"><i class="icon-play"></i> Make Timetables</button></li>
                     <li class="divider-vertical"></li>
                     
                     <li class="dropdown preferencesDropdown">
-                        <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="preferencesDropdown">Timetable Preferences</a>
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="preferencesDropdown"><i class="icon-tasks"></i> Timetable Preferences</a>
                         <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;"></div>
                     </li>
                     <li class="divider-vertical"></li>
                     
                     <!-- Add course menu -->
                     <li class="dropdown">
-                        <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="addCourseDropdown">Add a Course<strong class="caret"></strong></a>
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown" id="addCourseDropdown"><i class="icon-plus"></i> Add a Course<strong class="caret"></strong></a>
                         <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
                             <form id="addCourseForm">
                                 <input id="course-input" style="margin-bottom: 15px;" type="text" placeholder="Course Code eg. Apsc 201" name="courseInput">
@@ -39,7 +40,7 @@
 
                     <!-- Session dropdown menu -->
                     <li class="dropdown">
-                        <a id="session-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"></a>
+                        <a id="session-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-time"></i></a>
                         <ul class="dropdown-menu" id="session-dropdown-menu"></ul>
                     </li>
 
@@ -48,6 +49,7 @@
                     <!-- Campus dropdown menu -->
                     <li class="dropdown">
                         <a id="campus-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-flag"></i>
                             <jsp:scriptlet>
                                 String campus = (String) session.getAttribute("campus");
                                 if (campus == null) {
@@ -76,10 +78,13 @@
     <!--/.navbar-inner -->
 </div>
 
-<div class="container">
+
+    <!-- Add course error container -->
+    <div id="addCourseError"></div>
+    
     <div id="preferencesPanel">
         <div class="well" style="width:205px; padding: 15px 0;">
-            <h5 style="padding-left:15px;color: #6D6C6C;">Timetable Preferences</h5>
+            <h5 style="padding-left:15px;color: #6D6C6C;">Timetable Preferences <i class="icon-remove"></i></h5>
             <ul class="nav nav-list">
                 <li><label class="tree-toggler nav-header">Days Off</label>
                     <ul class="nav nav-list tree">
@@ -146,7 +151,7 @@
                 </li>
                 <li class="divider"></li>
 
-                <li><label class="tree-toggler nav-header">Time Between Classes <span style="color:blue;">(Not yet Implemented)</span></label>
+                <li><label class="tree-toggler nav-header">Time Between Classes <span style="color:rgb(28, 88, 147);">(Not yet Implemented)</span></label>
                     <ul class="nav nav-list tree">
                         <li>
                             <form>
@@ -172,9 +177,6 @@
         }
     %>
 
-    <!-- Add course error container -->
-    <div id="addCourseError"></div>
-    
     <div id="courses-table">
         <div class="info" style="opacity:0.7;">
         <%  List<Course> courseList = (List<Course>) session.getAttribute("courseList");
