@@ -4,7 +4,6 @@ import app.Preferences;
 import comparators.TimeComparator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class ValidCombination {
@@ -43,13 +42,13 @@ public class ValidCombination {
                 this.preferences = preferences;
                 timeLists = populateTimeLists();
                 
-                searchForConflict();
+                isValid = !hasTimeConflict();
                 if (isValid) {
                     computePriority();
                 }
 	}
-
-	
+        
+        
 	/**
 	 * Returns a priority computed from a valid list of combinations
 	 * @param activities
@@ -205,7 +204,7 @@ public class ValidCombination {
          * Search for conflicts in the activity combination
          * Stops at the first conflict found
          */
-        private void searchForConflict() {
+        private Boolean hasTimeConflict() {
             for (int i=0; i < NUM_TERMS; i++) {
                 for (int j=0; j < NUM_DAYS; j++) {
                     float endTime = 0;
@@ -217,15 +216,14 @@ public class ValidCombination {
                             Activity a1 = timeList.get(count - 1).getActivity();
                             Activity a2 = timeList.get(count).getActivity();
                             conflict = new Conflict(a1, a2);
-                            isValid = false;
-                            return;
+                            return true;
                         }
                         endTime = time.getEndTimeFloat();
                         count += 1;
                     }
                 }
             }
-            isValid = true;
+            return false;
         }
 
         

@@ -94,6 +94,10 @@ public class TimetablesBuilder {
 
         System.out.println("validCombinations.size()" + validCombinations.size());
         System.out.println("conflicts.size()" + conflicts.size());
+        
+        if (validCombinations.isEmpty() && conflicts.isEmpty()) {
+            return "<error>No results found for your preferences</error>";
+        }
 
         // there were valid combinations of activities
         if (!validCombinations.isEmpty()) {

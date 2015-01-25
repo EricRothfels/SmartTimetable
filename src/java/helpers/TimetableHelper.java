@@ -4,8 +4,10 @@ import app.Preferences;
 import comparators.CombinationComparator;
 import app.Timetables;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -43,8 +45,81 @@ public class TimetableHelper {
 	private boolean finishedCombinations = false;
         
         private final Preferences preferences;
+        private final int preferredEndTime;
+        private final int preferredStartTime;
 
+        
+        private Boolean areTermsEqual(String term, int termInt) {
+            if ((term.equals("1") || term.equals("1-2")) && termInt == 0) {
+                return true;
+            }
+            if ((term.equals("2") || term.equals("1-2")) && termInt == 1) {
+                return true;
+            }       
+            return false;
+        }
+        
+        /**
+         * 
+         * @param activity
+         * @param preferences
+         * @return 
+         */
+        private Boolean filterActivity(Activity activity, Preferences preferences) {
+            List<Time> times = activity.getTimes();
+            
+            Boolean valid = true;
+            if (preferredEndTime != -1) {
+                for (Time time : times) {
+                    if (preferredEndTime < time.getEndTimeFloat()) {
+                        return false;
+                    }
+                }
+            }
+            if (preferredStartTime != -1) {
+                for (Time time : times) {
+                    if (preferredStartTime > time.getStartTimeFloat()) {
+                        return false;
+                    }
+                }
+            }
+            
+            boolean [][] preferredDaysOff = preferences.getPreferredDaysOff();
+		
+            for (int i=0; i < preferredDaysOff.length; i++) {
+                for (int j=0; j < preferredDaysOff[0].length; j++) {
+                    if (preferredDaysOff[i][j]) {
+                        for (Time time : times) {
+                            if (time.getDayInteger() == j && areTermsEqual(time.getTerm(), i)) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 
+        private List<ActivityList> filterActivityLists(List<ActivityList> activityLists, Preferences preferences)  throws BadAttributeValueExpException {
+            List<ActivityList> filteredLists = new ArrayList<>();
+            for(ActivityList list : activityLists) {
+                ActivityList filteredList = new ActivityList(list.getCourseName());
+                
+                for (int i = 0; i < list.getNumActivityTypes(); i++) {
+                    for(Activity activity : list.getListOfActivities(i)) {
+                        if (filterActivity(activity, preferences)) {
+                            filteredList.checkExistingAndAdd(activity);
+                        }
+                    }
+                    if (filteredList.getListOfActivities(i).isEmpty() && !list.getListOfActivities(i).isEmpty()) {
+                        // handle case where no activities match the filter
+                        throw new BadAttributeValueExpException("No results found for your preferences");
+                    }
+                }
+                filteredLists.add(filteredList);
+            }
+            return filteredLists;
+        }
 
 	/**
 	 * Constructor
@@ -56,8 +131,12 @@ public class TimetableHelper {
 		conflicts = new LinkedHashSet<>();
 		validCombinations = new ArrayList<>();
 		validCombinationsQueue = new PriorityQueue<>(50, new CombinationComparator());
-		this.activityLists = activityLists;
                 this.preferences = preferences;
+                preferredEndTime = preferences.getPreferredEndTime();
+                preferredStartTime = preferences.getPreferredStartTime();
+                
+		this.activityLists = filterActivityLists(activityLists, preferences);
+                
 		
 		// 5 types of activities (currently): lectures, labs, tutorials, waiting list and misc. see ActivityList.java
 		// 4 types if we exclude waiting lists
@@ -89,6 +168,8 @@ public class TimetableHelper {
 		this.conflicts = conflicts;
 		this.activityLists = activityLists;
                 this.preferences = preferences;
+                preferredEndTime = preferences.getPreferredEndTime();
+                preferredStartTime = preferences.getPreferredStartTime();
 	}
 
 
@@ -142,6 +223,37 @@ public class TimetableHelper {
 		populateValidCombinationsList();
 		timetables.setTimetables(validCombinationsQueue);
 	}
+        
+        /**
+         * Check if activities belonging to same course are in the same term
+         * @param activities
+         * @return true if all activities belonging to same course are
+         * in the same term, false otherwise
+         */
+        private Boolean termsMatch(List<Activity> activities) {
+            Map<String, List<Activity>> map = new HashMap<>();
+            for (Activity activity : activities) {
+                String name = activity.getName();
+                List<Activity> list = map.get(name);
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                list.add(activity);
+                map.put(name, list);
+            }
+            
+            for (List<Activity> list : map.values()) {
+                if (list.size() > 1) {
+                    String term = list.get(0).getTerm();
+                    for (Activity activity : list) {
+                        if (!activity.getTerm().equals(term)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
 			
         /**
          * 
@@ -150,25 +262,28 @@ public class TimetableHelper {
          */
         private boolean computeCombination() throws BadAttributeValueExpException {
             List<Activity> activities = getActivityCombination();
-            ValidCombination validCombination = new ValidCombination(activities, preferences);
-            if (validCombination.isValid()) {
-                // no conflicts
-                validCombinationsQueue.add(validCombination);
-            } 
-            else {
-                // conflict found
-                Conflict conflict = validCombination.getConflict();
-                
-                // there was a conflict, if both activities are the only option, there are no possible validCombinations, so break 
-		if (isOnlyOption(conflict.getActivity1()) && isOnlyOption(conflict.getActivity2())) {
-                    conflicts.clear();
-                    conflicts.add(conflict);
-                    finishedCombinations = true;
-                    return true;
-		}
-		
-		else if (validCombinationsQueue.isEmpty()) {
-                    addConflict(conflict);
+            
+            if (termsMatch(activities)) {
+                ValidCombination validCombination = new ValidCombination(activities, preferences);
+                if (validCombination.isValid()) {
+                    // no conflicts
+                    validCombinationsQueue.add(validCombination);
+                } 
+                else {
+                    // conflict found
+                    Conflict conflict = validCombination.getConflict();
+
+                    // there was a conflict, if both activities are the only option, there are no possible validCombinations, so break 
+                    if (isOnlyOption(conflict.getActivity1()) && isOnlyOption(conflict.getActivity2())) {
+                        conflicts.clear();
+                        conflicts.add(conflict);
+                        finishedCombinations = true;
+                        return true;
+                    }
+
+                    else if (validCombinationsQueue.isEmpty()) {
+                        addConflict(conflict);
+                    }
                 }
             }
             return false;

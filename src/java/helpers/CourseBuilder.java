@@ -36,13 +36,13 @@ public class CourseBuilder {
         course = courseCache.get(session, campus, courseName);
         if (course == null) {
             // TODO check if the course is in the database
-            System.err.println("ERIC, course was NOT in the cache");
+            System.err.println("course was NOT in the cache");
             
             // make a new course
             course = new Course(courseName, session, campus);
             courseCache.put(session, campus, course);
         } else {
-            System.err.println("ERIC, course was IN the cache");
+            System.err.println("course " + course.getCourseName() + " was IN the cache");
         }
         return course;
     }

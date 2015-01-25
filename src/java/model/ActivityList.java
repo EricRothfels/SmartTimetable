@@ -8,11 +8,11 @@ import javax.management.BadAttributeValueExpException;
 public class ActivityList {
 	
 	/** 5 lists of activities:
-	 * 0: lectures, 1: labs, 2: tutorials, 3: misc. 4: waiting lists
+	 * 0: lectures, 1: labs, 2: tutorials, 3: misc. (excludes waiting lists)
 	 */
 	private List<Activity>[] activityLists;
 	
-	private static final int NUM_ACTIVITY_TYPES = 5;
+	private static final int NUM_ACTIVITY_TYPES = 4;
 	
 	// name of containing course
 	private final String courseName;

@@ -106,46 +106,61 @@
                 <li class="divider"></li>
 
                 <li><label class="tree-toggler nav-header">Earliest Class</label>
-                    <form>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="8"> 8:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="9"> 9:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="10"> 10:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="11"> 11:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="12"> 12:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="13"> 13:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="14"> 14:00</label>
-                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="15"> 15:00</label>
-                    </form>
+                    <ul class="nav nav-list tree">
+                        <li>
+                            <form>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="-1" checked="checked"> No Preference</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="8"> 8:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="9"> 9:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="10"> 10:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="11"> 11:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="12"> 12:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="13"> 13:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="14"> 14:00</label>
+                                <label><input type="radio" name="earliestClass" class="preferencesInput" value="15"> 15:00</label>
+                            </form>
+                        </li>
+                    </ul>
                 </li>
                 <li class="divider"></li>
 
                 <li><label class="tree-toggler nav-header">Latest Class</label>
-                    <form>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="10"> 10:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="11"> 11:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="12"> 12:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="13"> 13:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="14"> 14:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="15"> 15:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="16"> 16:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="17"> 17:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="18"> 18:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="19"> 19:00</label>
-                        <label><input type="radio" name="latestClass" class="preferencesInput" value="20"> 20:00</label>
-                    </form>
+                    <ul class="nav nav-list tree">
+                        <li>
+                            <form>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="-1" checked="checked"> No Preference</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="10"> 10:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="11"> 11:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="12"> 12:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="13"> 13:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="14"> 14:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="15"> 15:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="16"> 16:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="17"> 17:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="18"> 18:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="19"> 19:00</label>
+                                <label><input type="radio" name="latestClass" class="preferencesInput" value="20"> 20:00</label>
+                            </form>
+                        </li>
+                    </ul>
                 </li>
                 <li class="divider"></li>
 
-                <li><label class="tree-toggler nav-header">Time Between Classes</label>
-                    <form>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="0"> As little as possible</label>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="1"> 1 Hour</label>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="2"> 2 Hours</label>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="3"> 3 Hours</label>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="4"> 4 Hours</label>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="5"> 5 Hours</label>
-                        <label><input type="radio" name="breakTime" class="preferencesInput" value="12"> As much as possible</label>
-                    </form>
+                <li><label class="tree-toggler nav-header">Time Between Classes <span style="color:blue;">(Not yet Implemented)</span></label>
+                    <ul class="nav nav-list tree">
+                        <li>
+                            <form>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="-1" checked="checked"> No Preference</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="0"> As little as possible</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="1"> 1 Hour</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="2"> 2 Hours</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="3"> 3 Hours</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="4"> 4 Hours</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="5"> 5 Hours</label>
+                                <label><input type="radio" name="breakTime" class="preferencesInput" value="12"> As much as possible</label>
+                            </form>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -264,4 +279,4 @@
         });
     </script>
     
-    <div class="loading-modal"><!-- Loading animation modal, Place at bottom of page --></div>
+    <div class="loading-modal"><div class="loading-modal-background"></div><!-- Loading animation modal, Place at bottom of page --></div>

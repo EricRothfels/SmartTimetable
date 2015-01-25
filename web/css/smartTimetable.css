@@ -149,21 +149,34 @@ body {
 
 /* Start by setting display:none to make this hidden.
    Then we position it in relation to the viewport window
-   with position:fixed. Width, height, top and left speak
-   speak for themselves. Background we set to 80% white with
+   with position:fixed. Background we set to 80% white with
    our animation centered, and no-repeating */
-.loading-modal {
-    display:    none;
+.loading-modal-background {
+    /*display:    none;*/
     position:   fixed;
     z-index:    1000;
     top:        0;
     left:       0;
     height:     100%;
     width:      100%;
-    background: rgba( 255, 255, 255, .6) 
+    background: rgba( 255, 255, 255, .63) 
                 url('/SmartTimetable/img/ajax-loader.gif') 
                 50% 50% 
                 no-repeat;
+}
+
+.loading-modal {
+    border-radius: 15px;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    height: 100px;
+    width: 100px;
+    background-color: white;
+    margin-left: -50px;
+    margin-top: -50px;
+    top: 50%;
+    left: 50%;
 }
 
 /* When the body has the loading class, we turn

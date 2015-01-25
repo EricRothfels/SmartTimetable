@@ -366,7 +366,7 @@ function initPreferencesHandler() {
     $('.preferencesDropdown').click(function(event) {
         event.stopPropagation();
         event.preventDefault();
-        $('#preferencesPanel').toggle();
+        $('#preferencesPanel').toggle(350);
     });
     
     // toggle the visibility of the tree's children on click events
