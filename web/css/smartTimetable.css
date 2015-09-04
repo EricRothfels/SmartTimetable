@@ -199,3 +199,7 @@ body.loading .loading-modal {
                 50% 50% 
                 no-repeat;
 }
+
+#removePrefPanel {
+    cursor:pointer;
+}

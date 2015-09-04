@@ -374,7 +374,12 @@ function initPreferencesHandler() {
         $(this).parent().children('ul.tree').toggle(300);
     });
     
-    // initially the preference panel and hide all its trees
+    // hide pref panel when its close button is clicked
+    $('#removePrefPanel').click(function() {
+        $('#preferencesPanel').hide();
+    });
+    
+    // initially hide the preference panel and hide all its trees
     $('#preferencesPanel').hide();
     $('label.tree-toggler').parent().children('ul.tree').toggle(300);
     

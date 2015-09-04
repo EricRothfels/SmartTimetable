@@ -84,7 +84,7 @@
     
     <div id="preferencesPanel">
         <div class="well" style="width:205px; padding: 15px 0;">
-            <h5 style="padding-left:15px;color: #6D6C6C;">Timetable Preferences <i class="icon-remove"></i></h5>
+            <h5 style="padding-left:15px;color: #6D6C6C;">Timetable Preferences <i class="icon-remove" id="removePrefPanel"></i></h5>
             <ul class="nav nav-list">
                 <li><label class="tree-toggler nav-header">Days Off</label>
                     <ul class="nav nav-list tree">
