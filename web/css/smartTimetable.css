@@ -201,5 +201,6 @@ body.loading .loading-modal {
 }
 
 #removePrefPanel {
-    cursor:pointer;
+    cursor: pointer;
+    float: right;
 }
