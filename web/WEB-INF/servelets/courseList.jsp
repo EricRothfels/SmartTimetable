@@ -1,6 +1,7 @@
 
 <%@ page import="java.util.List" %>
 <%@ page import="model.Course" %>
+<%@ page import="app.Preferences" %>
 
 <div class="container">
 <div class="manageCourses-navbar">
@@ -85,88 +86,150 @@
     <div id="preferencesPanel">
         <div class="well">
             <h5 style="padding-left:15px;color: #6D6C6C;">Timetable Preferences <i class="icon-remove" id="removePrefPanel"></i></h5>
-            <table>
-                <tr>
-                    <td><label class="tree-toggler nav-header">Days Off</label>
-                        <ul class="nav nav-list tree">
-                            <li><label class="tree-toggler nav-header">Term 1</label>
-                                <form>
-                                    <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Monday"> Monday</label>
-                                    <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Tuesday"> Tuesday</label>
-                                    <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Wednesday"> Wednesday</label>
-                                    <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Thursday"> Thursday</label>
-                                    <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Friday"> Friday</label>
-                                </form>
-                            </li>
-                            <li><label class="tree-toggler nav-header">Term 2</label>
-                                <form>
-                                    <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Monday"> Monday</label>
-                                    <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Tuesday"> Tuesday</label>
-                                    <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Wednesday"> Wednesday</label>
-                                    <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Thursday"> Thursday</label>
-                                    <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Friday"> Friday</label>
-                                </form>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
+            <table class="preferencesTable">
+                <%
+                    // preferred time of earliest class
+                    int preferredStartTime = -1;
+                    int preferredEndTime = -1;
 
-                        <label class="tree-toggler nav-header">Earliest Class</label>
-                        <ul class="nav nav-list tree">
-                            <li>
-                                <form>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="-1" checked="checked"> No Preference</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="8"> 8:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="9"> 9:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="10"> 10:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="11"> 11:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="12"> 12:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="13"> 13:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="14"> 14:00</label>
-                                    <label><input type="radio" name="earliestClass" class="preferencesInput" value="15"> 15:00</label>
-                                </form>
-                            </li>
-                        </ul>
-                    </td>
+                    // preferred break time length between classes
+                    double preferredBreakLength = -1;
 
-                    <td><label class="tree-toggler nav-header">Latest Class</label>
-                        <ul class="nav nav-list tree">
-                            <li>
-                                <form>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="-1" checked="checked"> No Preference</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="10"> 10:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="11"> 11:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="12"> 12:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="13"> 13:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="14"> 14:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="15"> 15:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="16"> 16:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="17"> 17:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="18"> 18:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="19"> 19:00</label>
-                                    <label><input type="radio" name="latestClass" class="preferencesInput" value="20"> 20:00</label>
-                                </form>
-                            </li>
-                        </ul>
-                    </td>
+                    // preferred days off of school
+                    int NUM_DAYS = 5;
+                    boolean [][] preferredDaysOff = new boolean[2][NUM_DAYS]; // [term][dayOfWeek]
+                    for (int i=0; i < 2; i++) {
+                        for (int j=0; j < NUM_DAYS; j++) {
+                            preferredDaysOff[i][j] = false;
+                        }
+                    }
 
-                    <td><label class="tree-toggler nav-header">Time Between Classes <span style="color:rgb(28, 88, 147);">(Not yet Implemented)</span></label>
-                        <ul class="nav nav-list tree">
-                            <li>
-                                <form>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="-1" checked="checked"> No Preference</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="0"> As little as possible</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="1"> 1 Hour</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="2"> 2 Hours</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="3"> 3 Hours</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="4"> 4 Hours</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="5"> 5 Hours</label>
-                                    <label><input type="radio" name="breakTime" class="preferencesInput" value="12"> As much as possible</label>
-                                </form>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
+                    Preferences prefs = (Preferences) session.getAttribute("preferences");
+                    if (prefs != null) {
+                        preferredStartTime = prefs.getPreferredStartTime();
+                        preferredEndTime = prefs.getPreferredEndTime();
+                        preferredBreakLength = prefs.getPreferredBreakLength();
+                        preferredDaysOff = prefs.getPreferredDaysOff();
+                    }
+                %>
+                <tbody>
+                    <tr>
+                        <td><label class="tree-toggler nav-header">Days Off</label>
+                            <ul class="nav nav-list tree">
+                                <li><label class="tree-toggler nav-header">Term 1</label>
+                                    <form>
+                                        <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Monday"
+                                                      <% if (preferredDaysOff[0][0]) { %> checked="checked" <% } %> > Monday</label>
+                                        <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Tuesday"
+                                                      <% if (preferredDaysOff[0][1]) { %> checked="checked" <% } %> > Tuesday</label>
+                                        <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Wednesday"
+                                                      <% if (preferredDaysOff[0][2]) { %> checked="checked" <% } %> > Wednesday</label>
+                                        <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Thursday"
+                                                      <% if (preferredDaysOff[0][3]) { %> checked="checked" <% } %> > Thursday</label>
+                                        <label><input type="checkbox" name="dayoffTerm1" class="preferencesInput" value="Friday"
+                                                      <% if (preferredDaysOff[0][4]) { %> checked="checked" <% } %> > Friday</label>
+                                    </form>
+                                </li>
+                                <li><label class="tree-toggler nav-header">Term 2</label>
+                                    <form>
+                                        <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Monday"
+                                                      <% if (preferredDaysOff[1][0]) { %> checked="checked" <% } %> > Monday</label>
+                                        <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Tuesday"
+                                                      <% if (preferredDaysOff[1][1]) { %> checked="checked" <% } %> > Tuesday</label>
+                                        <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Wednesday"
+                                                      <% if (preferredDaysOff[1][2]) { %> checked="checked" <% } %> > Wednesday</label>
+                                        <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Thursday"
+                                                      <% if (preferredDaysOff[1][3]) { %> checked="checked" <% } %> > Thursday</label>
+                                        <label><input type="checkbox" name="dayoffTerm2" class="preferencesInput" value="Friday"
+                                                      <% if (preferredDaysOff[1][4]) { %> checked="checked" <% } %> > Friday</label>
+                                    </form>
+                                </li>
+                            </ul>
+                        </td>
+                        
+                        <td>
+                            <label class="tree-toggler nav-header">Earliest Class</label>
+                            <ul class="nav nav-list tree">
+                                <li>
+                                    <form>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="-1" 
+                                                      <% if (preferredStartTime == -1) { %> checked="checked" <% } %> > No Preference</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="8"
+                                                      <% if (preferredStartTime == 8) { %> checked="checked" <% } %> > 8:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="9"
+                                                      <% if (preferredStartTime == 9) { %> checked="checked" <% } %> > 9:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="10"
+                                                      <% if (preferredStartTime == 10) { %> checked="checked" <% } %> > 10:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="11"
+                                                      <% if (preferredStartTime == 11) { %> checked="checked" <% } %> > 11:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="12"
+                                                      <% if (preferredStartTime == 12) { %> checked="checked" <% } %> > 12:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="13"
+                                                      <% if (preferredStartTime == 13) { %> checked="checked" <% } %> > 13:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="14"
+                                                      <% if (preferredStartTime == 14) { %> checked="checked" <% } %> > 14:00</label>
+                                        <label><input type="radio" name="earliestClass" class="preferencesInput" value="15"
+                                                      <% if (preferredStartTime == 15) { %> checked="checked" <% } %> > 15:00</label>
+                                    </form>
+                                </li>
+                            </ul>
+                        </td>
+
+                        <td><label class="tree-toggler nav-header">Latest Class</label>
+                            <ul class="nav nav-list tree">
+                                <li>
+                                    <form>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="-1"
+                                                      <% if (preferredEndTime == -1) { %> checked="checked" <% } %> > No Preference</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="12"
+                                                      <% if (preferredEndTime == 12) { %> checked="checked" <% } %> > 12:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="13"
+                                                      <% if (preferredEndTime == 13) { %> checked="checked" <% } %> > 13:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="14"
+                                                      <% if (preferredEndTime == 14) { %> checked="checked" <% } %> > 14:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="15"
+                                                      <% if (preferredEndTime == 15) { %> checked="checked" <% } %> > 15:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="16"
+                                                      <% if (preferredEndTime == 16) { %> checked="checked" <% } %> > 16:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="17"
+                                                      <% if (preferredEndTime == 17) { %> checked="checked" <% } %> > 17:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="18"
+                                                      <% if (preferredEndTime == 18) { %> checked="checked" <% } %> > 18:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="19"
+                                                      <% if (preferredEndTime == 19) { %> checked="checked" <% } %> > 19:00</label>
+                                        <label><input type="radio" name="latestClass" class="preferencesInput" value="20"
+                                                      <% if (preferredEndTime == 20) { %> checked="checked" <% } %> > 20:00</label>
+                                    </form>
+                                </li>
+                            </ul>
+                        </td>
+
+                        <td><label class="tree-toggler nav-header">Time Between Classes <span style="color:rgb(28, 88, 147);">(Not yet Implemented)</span></label>
+                            <ul class="nav nav-list tree">
+                                <li>
+                                    <form>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="-1"
+                                                      <% if (preferredBreakLength == -1) { %> checked="checked" <% } %> > No Preference</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="0"
+                                                      <% if (preferredBreakLength == 0) { %> checked="checked" <% } %> > As little as possible</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="1"
+                                                      <% if (preferredBreakLength == 1) { %> checked="checked" <% } %> > 1 Hour</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="2"
+                                                      <% if (preferredBreakLength == 2) { %> checked="checked" <% } %> > 2 Hours</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="3"
+                                                      <% if (preferredBreakLength == 3) { %> checked="checked" <% } %> > 3 Hours</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="4"
+                                                      <% if (preferredBreakLength == 4) { %> checked="checked" <% } %> > 4 Hours</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="5"
+                                                      <% if (preferredBreakLength == 5) { %> checked="checked" <% } %> > 5 Hours</label>
+                                        <label><input type="radio" name="breakTime" class="preferencesInput" value="12"
+                                                      <% if (preferredBreakLength == 12) { %> checked="checked" <% } %> > As much as possible</label>
+                                    </form>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -265,9 +328,6 @@
                 'placement': 'bottom'
             });
             
-            // init ajax handlers
-            initPreferencesHandler();
-            
             // Populate Session Drop-down menu with sessions
             initSessionDropdown();
             
@@ -278,6 +338,7 @@
             initCourseSubmitHandler();
             initChangeCampusHandler();
             initMakeTimetableHandler();
+            initPreferencesHandler();
         });
     </script>
     

@@ -376,7 +376,7 @@ function initPreferencesHandler() {
     
     // hide pref panel when its close button is clicked
     $('#removePrefPanel').click(function() {
-        $('#preferencesPanel').hide();
+        $('#preferencesPanel').hide(350);
     });
     
     // initially hide the preference panel and hide all its trees

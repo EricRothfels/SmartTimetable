@@ -49,10 +49,6 @@
                         <li class="divider-vertical"></li>
                         <li id="courseList" class=""><a href="courseList"><i class="icon-th-list"></i> Course List</a></li>
                         <li class="divider-vertical"></li>
-                        <li id="timetables" class=""><a href="timetables"><i class="icon-list-alt"></i> Timetables</a></li>
-                        <li class="divider-vertical"></li>
-                        <!--li id="stats" class=""><a href=""><i class="icon-signal"></i> Stats</a></li>
-                        <li class="divider-vertical"></li-->
                         <li id="about" class=""><a href="about"><i class="icon-info-sign"></i> About</a></li>
                     </ul>
                     <div class="pull-right">

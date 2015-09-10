@@ -10,3 +10,9 @@ build/
 
 # mercurial files
 .hg/
+
+#system properties files
+*.properties
+
+#private files
+/nbproject/private/

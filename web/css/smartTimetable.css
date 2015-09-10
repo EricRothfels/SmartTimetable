@@ -204,3 +204,7 @@ body.loading .loading-modal {
     cursor: pointer;
     float: right;
 }
+
+.preferencesTable td {
+    padding-left: 3em;
+}

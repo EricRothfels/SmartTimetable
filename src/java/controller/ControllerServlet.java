@@ -31,7 +31,6 @@ import webServices.ScrapeWebPage;
 @WebServlet(name = "Controller",
     loadOnStartup = 1,
     urlPatterns = {"/addCourse",
-    "/timetables",
     "/makeTimetables",
     "/courseList",
     "/session",
@@ -73,8 +72,6 @@ public class ControllerServlet extends HttpServlet {
             case "/removeCourse":
                 removeCourse(request, session);
                 userPath = "/courseList";
-                break;
-            case "/timetables":
                 break;
             case "/makeTimetables": 
                 Preferences prefs = getTimetablePreferences(session);
