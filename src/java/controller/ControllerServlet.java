@@ -299,7 +299,7 @@ public class ControllerServlet extends HttpServlet {
             List<StandardTimetable> stts = (List<StandardTimetable>) session.getAttribute("sttList");
             long start = System.nanoTime();
 
-            TimetablesBuilder ttBuilder = new TimetablesBuilder(courses, stts, prefs);
+            TimetablesBuilder ttBuilder = new TimetablesBuilder(courses, prefs);
             xmlResponse = ttBuilder.makeTimetables();
 
             double time = (System.nanoTime() - start) / 1000000000.0;

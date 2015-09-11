@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -189,7 +187,7 @@ public class Activity {
 	/**
 	 * @return the course name
 	 */
-	public String getName() {
+	public String getCourseName() {
 		return courseName;
 	}
 	

@@ -12,6 +12,11 @@ var errorAlertTimeout;
  * @param String message
  */
 function addErrorMessage(message) {
+    if (message.indexOf(':') > -1) {
+        console.log(message);
+        // remove error type when displaying to users
+        message = message.substring(message.indexOf(':') + 1);
+    }
     var div = $('#addCourseError');
     div.html(  '<div class="alert alert-block alert-error fade in">' +
         closeButton +
@@ -78,11 +83,10 @@ function processAddCourseResponse(response) {
         // success case
         console.log("Course response returned");
         var courseName = course.getElementsByTagName("courseName")[0].childNodes[0].nodeValue;
-        var courseTerm = course.getElementsByTagName("term")[0].childNodes[0].nodeValue;
         var url = course.getElementsByTagName("url")[0].childNodes[0].nodeValue;
         
         // add the course to the course list table
-        return addCoursetoList(courseName, courseTerm, url);
+        return addCoursetoList(courseName, url);
     }
     else {
         // error case
@@ -120,13 +124,9 @@ function processMakeTimetablesResponse(response) {
     addErrorMsg(response);
 }
 
-function addCoursetoList(courseName, courseTerm, url) {
+function addCoursetoList(courseName, url) {
     var tableBody = $('#courses-table-body');
     var index = 1;
-
-    if (courseTerm == "null") {
-        courseTerm = '-';
-    }
 
     // if tableBody exists
     if (tableBody.length) {
@@ -149,8 +149,6 @@ function addCoursetoList(courseName, courseTerm, url) {
                                     <th>#</th>\
                                     <th></th>\
                                     <th>Course Name</th>\
-                                    <th>Term</th>\
-                                    <th>Username</th>\
                                     <th></th>\
                                 </tr></thead>\
                             <tbody id="courses-table-body">\
@@ -162,8 +160,6 @@ function addCoursetoList(courseName, courseTerm, url) {
     tableBody.append('<tr><td>' + index + '</td>\\n\
                           <td><div class="course-modal ' + courseClass + '"></div></td>\
                           <td><a href="' + url + '" target="_blank" class="link">' + courseName + '</a></td>\
-                          <td>' + courseTerm + '</td>\
-                          <td>[username]</td>\
                           <td><a href="removeCourse?course='+ courseName +'" role="button" data-toggle="modal">\
                                   <i class="icon-remove" title="Remove '+ courseName +'"></i>\
                               </a></td></tr>');

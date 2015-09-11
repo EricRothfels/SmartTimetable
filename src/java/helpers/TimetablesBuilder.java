@@ -8,7 +8,6 @@ import app.Preferences;
 import threadServices.PopulateSTTRunnable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Set;
 import javax.management.BadAttributeValueExpException;
 import model.Activity;
@@ -18,7 +17,6 @@ import model.Course;
 import model.StandardTimetable;
 import model.Time;
 import model.ValidCombination;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -28,15 +26,12 @@ public class TimetablesBuilder {
 
     //private HttpSession httpSession;
     private List<Course> selectedCourses;
-    private List<StandardTimetable> selectedSTTs;
     private TimetableHelper timetableHelper;
     private final Preferences preferences;
     
     public TimetablesBuilder(List<Course> selectedCourses,
-                             List<StandardTimetable> selectedSTTs,
                              Preferences prefs) throws Exception {
         this.selectedCourses = selectedCourses;
-        this.selectedSTTs = selectedSTTs;
         this.preferences = prefs;
         this.timetableHelper = init();
     }
@@ -46,33 +41,15 @@ public class TimetablesBuilder {
      * XML response to be displayed to the user
      */
     private TimetableHelper init() throws Exception {
-        boolean sttListIsEmpty = selectedSTTs == null || selectedSTTs.isEmpty();
         boolean courseListIsEmpty = selectedCourses == null || selectedCourses.isEmpty();
 
-        // case both empty
-        if (sttListIsEmpty && courseListIsEmpty) {
+        // course list is empty
+        if (courseListIsEmpty) {
             throw new BadAttributeValueExpException("Cannot make timetables: No courses have been added.");
         }
-        // case only courses exist
-        else if (sttListIsEmpty) {
+        else {
             List<ActivityList> activityLists = populateActivityLists(selectedCourses);
             return new TimetableHelper(activityLists, preferences);
-        }
-        // case only stts exist
-        else if (courseListIsEmpty) {
-            // scrape the stts' activity data from the web
-            populateSTTs(selectedSTTs);
-            List<ValidCombination> validCombinations = orderSTTs();
-            throw new NotImplementedException();
-        }
-        // case both exist
-        else {
-            // scrape the stts' activity data from the web
-            populateSTTs(selectedSTTs);
-            List<ValidCombination> validCombinations = orderSTTs();
-            
-            //TODO implement this case: both stts and courses
-            throw new NotImplementedException();
         }
     }
     
@@ -108,33 +85,6 @@ public class TimetablesBuilder {
         }
     }
 
-    
-    /**
-     * 
-     * @return an ordered list of valid combinations from the stts
-     * @throws InterruptedException 
-     */
-    private List<ValidCombination> orderSTTs() throws InterruptedException {
-        List<ValidCombination> validCombinations = new ArrayList<>();
-        PriorityQueue<ValidCombination> validCombinationsQueue = new PriorityQueue<>();
-        
-        // add each stt's activities as a valid combination (there shouldn't be conflicts)
-        // add the combination to a priority queue to prioritize based on user preferences
-        for (StandardTimetable stt : selectedSTTs) {
-            List<Activity> activities = new ArrayList<>();
-            for (Course course : stt.getCourses()) {
-                activities.addAll(course.getAllActivities());
-            }
-            ValidCombination validCombination = new ValidCombination(activities, preferences);
-            validCombinationsQueue.add(validCombination);
-        }
-        // pop from the priority queue into the return list
-        for (int i = 0; i < validCombinationsQueue.size(); i++) {
-            ValidCombination validCombination = validCombinationsQueue.poll();
-            validCombinations.add(validCombination);
-        }
-        return validCombinations;
-    }
     
     /**
      *

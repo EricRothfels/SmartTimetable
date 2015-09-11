@@ -51,8 +51,7 @@ public class CourseBuilder {
         String xmlResponse = "";
         if (course != null) {
             xmlResponse = "<course>" +
-            "<courseName>" + course.getCourseName() + "</courseName>" + 
-            "<term>" + course.getTerm() + "</term>" +
+            "<courseName>" + course.getCourseName() + "</courseName>" +
             "<url>" + course.getUrl().replaceAll("&", "&amp;") + "</url>" +
          "</course>";
         }

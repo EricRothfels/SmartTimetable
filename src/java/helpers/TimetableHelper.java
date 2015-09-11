@@ -137,10 +137,9 @@ public class TimetableHelper {
                 
 		this.activityLists = filterActivityLists(activityLists, preferences);
                 
-		
 		// 5 types of activities (currently): lectures, labs, tutorials, waiting list and misc. see ActivityList.java
 		// 4 types if we exclude waiting lists
-		activityIndices = new int[activityLists.size()][4];
+		activityIndices = new int[this.activityLists.size()][4];
 		
 		listIndex = 0;
 		typeIndex = 0;
@@ -179,49 +178,48 @@ public class TimetableHelper {
          * Else makes a Conflict
          * Stops after going through all possible combinations, or after adding
          * NUM_COMPARE ValidCombinations
-	 * @param selectedCourses
 	 * @throws BadAttributeValueExpException
 	 * @throws CloneNotSupportedException 
 	 */
 	public void makeTimetables() throws BadAttributeValueExpException {
-		
-		if (listIndex >= activityIndices.length)
-			return;
-		computeCombination();
-		long i = 0;
-		while (true) {
-			i++;
-			while ( listIndex < activityIndices.length &&
-                                activityIndices[listIndex][typeIndex] >=
-                                activityLists.get(listIndex).getListOfActivities(typeIndex).size()-1) {
-				
-				activityIndices[listIndex][typeIndex] = 0;
-				typeIndex++;
-				if (typeIndex >= activityIndices[0].length) {
-					typeIndex = 0;
-					listIndex++;
-				}
-			}
-			if (listIndex >= activityIndices.length) {
-                            	// the end of the combinations have been reached, indicate with finishedCombinations = true
-				finishedCombinations = true;
-				break;
-			}
-			activityIndices[listIndex][typeIndex] += 1;
-			typeIndex = 0;
-			listIndex = 0;			
-			
-			if (computeCombination()) {
-                            break;
-                        }
-                        if (i >= MAX_ITERATIONS) {
-                            break;
-                        }
-				
-		}  // end while loop
-		System.out.println("makeTimetables() loop iterations: " + i);
-		populateValidCombinationsList();
-		timetables.setTimetables(validCombinationsQueue);
+            if (listIndex >= activityIndices.length) {
+                    return;
+            }
+            computeCombination();
+            long i = 0;
+            while (true) {
+                i++;
+                while (listIndex < activityIndices.length
+                        && activityIndices[listIndex][typeIndex]
+                        >= activityLists.get(listIndex).getListOfActivities(typeIndex).size() - 1) {
+
+                    activityIndices[listIndex][typeIndex] = 0;
+                    typeIndex++;
+                    if (typeIndex >= activityIndices[0].length) {
+                        typeIndex = 0;
+                        listIndex++;
+                    }
+                }
+                if (listIndex >= activityIndices.length) {
+                    // the end of the combinations have been reached, indicate with finishedCombinations = true
+                    finishedCombinations = true;
+                    break;
+                }
+                activityIndices[listIndex][typeIndex] += 1;
+                typeIndex = 0;
+                listIndex = 0;
+
+                if (computeCombination()) {
+                    break;
+                }
+                if (i >= MAX_ITERATIONS) {
+                    break;
+                }
+
+            }  // end while loop
+            System.out.println("makeTimetables() loop iterations: " + i);
+            populateValidCombinationsList();
+            timetables.setTimetables(validCombinationsQueue);
 	}
         
         /**
@@ -233,7 +231,7 @@ public class TimetableHelper {
         private Boolean termsMatch(List<Activity> activities) {
             Map<String, List<Activity>> map = new HashMap<>();
             for (Activity activity : activities) {
-                String name = activity.getName();
+                String name = activity.getCourseName();
                 List<Activity> list = map.get(name);
                 if (list == null) {
                     list = new ArrayList<>();

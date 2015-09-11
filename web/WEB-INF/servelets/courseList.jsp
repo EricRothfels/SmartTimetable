@@ -270,8 +270,6 @@
                         <th>#</th>
                         <th></th>
                         <th>Course Name</th>
-                        <th>Term</th>
-                        <th>Username</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -288,8 +286,6 @@
                                 <% out.print(course.getCourseName());%>
                             </a>
                         </td>
-                        <td> <% out.print(course.getTerm());%> </td>
-                        <td>[username]</td>
                         <td>
                             <a href="removeCourse?course=<% out.print(course.getCourseName());%>" role="button" data-toggle="modal">
                                 <i class="icon-remove" title="Remove <% out.print(course.getCourseName()); %>"></i>
