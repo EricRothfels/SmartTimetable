@@ -131,11 +131,8 @@ function addCoursetoList(courseName, url) {
     // if tableBody exists
     if (tableBody.length) {
         index = tableBody.children().length + 1;
-        console.log("Adding to existing course table");
     }
     else { // tableBody does not exist. make one
-        console.log("Making course table");
-        
         var div = $('#courses-table');
         div.html('  <div class="btn-toolbar">\
                         <button class="btn btn-info">Save this List</button>\

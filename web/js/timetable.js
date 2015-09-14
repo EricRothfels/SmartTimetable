@@ -1,4 +1,4 @@
-var TIMETABLES_PER_PAGE = 6;   // number of timetables to display per 'page'
+var TIMETABLES_PER_PAGE = 5;   // number of timetables to display per 'page'
 var xmlTimetables = null;
 var pageNumber = null;
 
@@ -129,6 +129,22 @@ function makeEvent(activity, time, lowTime, tableIds, term) {
     div.html(event);
 }
 
+function makeCourseListButton(activityList) {
+    var courseListButton = $('<span style="float:right;" class="dropdown">\
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">\
+        <button style="font-weight: normal;" class="btn">\
+        <i class="icon-th-list"></i> Course Section List\
+        <strong class="caret"></strong></button></a></span>');
+
+    var courseList = '<div class="dropdown-menu"><form style="padding: 0 0 0 30px;margin: 0;">';
+    for (var i=0; i < activityList.length; i++) {
+        courseList += '<p style="margin-bottom: 2px;">' + activityList[i].name + ' ' + activityList[i].id + '</p>';
+    }
+    courseList += '</form></div>';
+    courseListButton.append(courseList);
+    return courseListButton;
+}
+
 function displayTimetable(startTime, endTime, activityList, tableNum, container) {
     // make empty table for each term    
     var tableId1 = 'timetable' + tableNum + '-term1';
@@ -138,14 +154,16 @@ function displayTimetable(startTime, endTime, activityList, tableNum, container)
     var tableId2 = 'timetable' + tableNum + '-term2';
     var table2 = '<span style="display:inline-block;" id="' + tableId2 + '"><p>Term 2</p>';
     table2 += makeEmptyTable(startTime, endTime, 2);
-    
     table1 += '</span>';
     table2 += '</span>';
-    var header = '<h5>Timetable ' + (tableNum + 1) + '</h5>'; 
-    var table = '<div class="timetableDiv-outer">' + header + table1 + table2 + '</div>';
     
-    // set/display the table
-    container.html(container.html() + table);
+    var header = $('<div><h5 style="display:inline-block;">Timetable ' + (tableNum + 1) + '</h5></div>');
+    var courseListButton = makeCourseListButton(activityList);
+    header.append(courseListButton);
+    var table = $('<div class="timetableDiv-outer"></div>');
+    table.append(header);
+    table.append(table1 + table2);
+    container.append(table);
     
     // populate the tables with activities
     var tableIds = [tableId1, tableId2];

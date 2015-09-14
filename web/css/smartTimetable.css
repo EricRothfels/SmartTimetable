@@ -147,12 +147,7 @@ body {
     opacity: 0.9;
 }
 
-/* Start by setting display:none to make this hidden.
-   Then we position it in relation to the viewport window
-   with position:fixed. Background we set to 80% white with
-   our animation centered, and no-repeating */
-.loading-modal-background {
-    /*display:    none;*/
+.loading-modal {
     position:   fixed;
     z-index:    1000;
     top:        0;
@@ -164,8 +159,11 @@ body {
                 50% 50% 
                 no-repeat;
 }
-
-.loading-modal {
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.loading-modal-background {
     border-radius: 15px;
     display: none;
     position: fixed;
@@ -179,15 +177,14 @@ body {
     left: 50%;
 }
 
-/* When the body has the loading class, we turn
-   the scrollbar off with overflow:hidden */
+/* turn the scrollbar off */
 body.loading {
     overflow: hidden;   
 }
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
-body.loading .loading-modal {
+body.loading .loading-modal-background {
     display: block;
 }
 

@@ -17,7 +17,7 @@
                 
                 <ul class="nav pull-right">
                     <!--li id="makeTimetables" class=""><a href="">Make Timetables</a></li-->
-                    <li id="makeTimetables" class=""><button class="btn btn-info"><i class="icon-play"></i> Make Timetables</button></li>
+                    <li id="makeTimetables"><button class="btn btn-info"><i class="icon-play"></i> Make Timetables</button></li>
                     <li class="divider-vertical"></li>
                     
                     <li class="dropdown preferencesDropdown">
@@ -338,4 +338,5 @@
         });
     </script>
     
-    <div class="loading-modal"><div class="loading-modal-background"></div><!-- Loading animation modal, Place at bottom of page --></div>
+    <!-- Loading animation modal, Place at bottom of page -->
+    <div class="loading-modal-background"><div class="loading-modal"></div>
