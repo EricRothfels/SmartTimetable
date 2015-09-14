@@ -28,10 +28,10 @@ function addErrorMessage(message) {
     // clear previous timeouts
     clearTimeout(errorAlertTimeout);
     
-    // make error disappear after 5s
+    // make error disappear after 10s
     errorAlertTimeout = setTimeout(function() {
         clearErrorMsg();
-    }, 5000);
+    }, 10000);
 }
 
 function addErrorMsg(response) {

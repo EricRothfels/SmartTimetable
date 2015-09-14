@@ -204,7 +204,7 @@
                             </ul>
                         </td>
 
-                        <td><label class="tree-toggler nav-header">Time Between Classes <span style="color:rgb(28, 88, 147);">(Not yet Implemented)</span></label>
+                        <td><label class="tree-toggler nav-header">Time Between Classes</label>
                             <ul class="nav nav-list tree">
                                 <li>
                                     <form>

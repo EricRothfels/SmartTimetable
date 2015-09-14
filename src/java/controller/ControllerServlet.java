@@ -383,8 +383,6 @@ public class ControllerServlet extends HttpServlet {
     private void writeXmlResponse(HttpServletResponse response, String xmlResponse) {
         response.setContentType("text/xml");
         response.setHeader("Cache-Control", "no-cache");
-        
-        System.out.println(xmlResponse);
         try {
             response.getWriter().write(xmlResponse);
         } catch (IOException ex) {

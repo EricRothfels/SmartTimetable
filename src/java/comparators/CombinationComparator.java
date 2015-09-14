@@ -18,7 +18,7 @@ public class CombinationComparator implements Comparator<ValidCombination> {
 			return 0;
 		
 		// p1 is higher priority
-		else if (p1 < p2)
+		else if (p1 > p2)
 			return 1;
 		
 		// p2 is higher priority

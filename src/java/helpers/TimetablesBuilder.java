@@ -59,10 +59,6 @@ public class TimetablesBuilder {
      * @throws BadAttributeValueExpException 
      */
     public String makeTimetables() throws BadAttributeValueExpException {
-        if (timetableHelper.isFinishedCombinations()) {
-            return "<error>finished</error>";
-        }
-
         // make the timetables
         timetableHelper.makeTimetables();
         
